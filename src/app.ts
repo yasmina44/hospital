@@ -1,35 +1,31 @@
 import express, { Application } from "express";
-import cors from "cors";
-
 import userRoutes from "./api/user.api";
 
 
 export const app: Application = express();
 
 
-// middleware
-app.use(cors());
-
+// Middleware
 app.use(express.json());
-
-app.use(express.urlencoded({
-    extended:true
-}));
+app.use(express.urlencoded({ extended: true }));
 
 
-// routes
+// Routes
 app.use(
-    "/api/users",
-    userRoutes
+  "/api/users",
+  userRoutes
 );
 
 
-// test
-app.get("/", (req,res)=>{
+// Test route
+app.get("/", (req, res) => {
 
-    res.status(200).json({
-        success:true,
-        message:"Hospital API running"
-    });
+  res.status(200).json({
+    success: true,
+    message: "Hospital API is running"
+  });
 
 });
+
+
+export default app;

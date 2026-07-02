@@ -1,37 +1,126 @@
-import User from "../models/user.model";
+import User from "../models/User";
+import { IUser } from "../interfaces/user.interface";
+import { Types } from "mongoose";
+
+export class UserRepository {
+
+  // CREATE
+  async create(userData: IUser) {
+    const user = await User.create(userData);
+    return user;
+  }
 
 
-export class UserRepository{
+  // READ ALL
+  async findAll() {
+    const users = await User.find();
+    return users;
+  }
 
 
-async create(data:any){
+  // READ ONE BY ID
+  async findById(id: string) {
 
- return await User.create(data);
+    if (!Types.ObjectId.isValid(id)) {
+      return null;
+    }
 
-}
-
-
-async findAll(){
-
- return await User.findAll();
-
-}
+    const user = await User.findById(id);
+    return user;
+  }
 
 
-async findById(id:number){
+  // READ ONE BY EMAIL
+  async findByEmail(email: string) {
 
- return await User.findByPk(id);
+    const user = await User.findOne({
+      email
+    });
 
-}
+    return user;
+  }
 
 
-async delete(id:number){
+  // UPDATE
+  async update(
+    id: string,
+    userData: Partial<IUser>
+  ) {
 
- return await User.destroy({
-    where:{id}
- })
+    if (!Types.ObjectId.isValid(id)) {
+      return null;
+    }
 
-}
+    const updatedUser =
+      await User.findByIdAndUpdate(
+        id,
+        userData,
+        {
+          new: true,
+          runValidators: true
+        }
+      );
 
+    return updatedUser;
+  }
+
+
+
+  // DELETE
+  async delete(id: string) {
+
+    if (!Types.ObjectId.isValid(id)) {
+      return null;
+    }
+
+    const deletedUser =
+      await User.findByIdAndDelete(id);
+
+    return deletedUser;
+  }
+
+
+
+  // COUNT USERS
+  async count() {
+
+    const total =
+      await User.countDocuments();
+
+    return total;
+  }
+
+
+
+  // SEARCH USERS
+  async search(keyword: string) {
+
+    const users =
+      await User.find({
+        $or: [
+          {
+            firstName: {
+              $regex: keyword,
+              $options: "i"
+            }
+          },
+          {
+            lastName: {
+              $regex: keyword,
+              $options: "i"
+            }
+          },
+          {
+            email: {
+              $regex: keyword,
+              $options: "i"
+            }
+          }
+        ]
+      });
+
+
+    return users;
+  }
 
 }

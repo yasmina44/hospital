@@ -3,97 +3,104 @@ import { UserService } from "../services/user.service";
 
 const service = new UserService();
 
-export const createUser = async (
-  req: Request,
-  res: Response
-): Promise<void> => {
-  try {
-    console.log("BODY:", req.body);
 
+// CREATE USER
+export const createUser = async (req: Request, res: Response) => {
+  try {
     const user = await service.createUser(req.body);
 
-    console.log("CREATED:", user);
+    res.status(201).json({
+      success: true,
+      data: user,
+    });
 
-    res.status(201).json(user);
-  } catch (error) {
-    console.error("ERROR:", error);
-
+  } catch (error: any) {
     res.status(500).json({
       success: false,
-      message: "Failed to create user",
-      error,
+      message: error.message,
     });
   }
 };
 
-export const getUsers = async (
-  req: Request,
-  res: Response
-): Promise<void> => {
+
+// GET ALL USERS
+export const getUsers = async (req: Request, res: Response) => {
   try {
     const users = await service.getUsers();
 
-    res.status(200).json(users);
-  } catch (error) {
-    console.error("ERROR:", error);
+    res.status(200).json({
+      success: true,
+      data: users,
+    });
 
+  } catch (error: any) {
     res.status(500).json({
       success: false,
-      message: "Failed to fetch users",
-      error,
+      message: error.message,
     });
   }
 };
 
-export const getUser = async (
-  req: Request,
-  res: Response
-): Promise<void> => {
+
+// GET SINGLE USER
+export const getUser = async (req: Request, res: Response) => {
   try {
-    const id = Number(req.params.id);
-
-    const user = await service.getUser(id);
-
-    if (!user) {
-      res.status(404).json({
-        success: false,
-        message: "User not found",
-      });
-      return;
-    }
-
-    res.status(200).json(user);
-  } catch (error) {
-    console.error("ERROR:", error);
-
-    res.status(500).json({
-      success: false,
-      message: "Failed to fetch user",
-      error,
-    });
-  }
-};
-
-export const deleteUser = async (
-  req: Request,
-  res: Response
-): Promise<void> => {
-  try {
-    const id = Number(req.params.id);
-
-    await service.deleteUser(id);
+    const user = await service.getUser(
+      req.params.id as string
+    );
 
     res.status(200).json({
       success: true,
-      message: "User deleted successfully",
+      data: user,
     });
-  } catch (error) {
-    console.error("ERROR:", error);
 
+  } catch (error: any) {
     res.status(500).json({
       success: false,
-      message: "Failed to delete user",
-      error,
+      message: error.message,
+    });
+  }
+};
+
+
+// UPDATE USER
+export const updateUser = async (req: Request, res: Response) => {
+  try {
+    const user = await service.updateUser(
+      req.params.id as string,
+      req.body
+    );
+
+    res.status(200).json({
+      success: true,
+      data: user,
+    });
+
+  } catch (error: any) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+
+// DELETE USER
+export const deleteUser = async (req: Request, res: Response) => {
+  try {
+    const user = await service.deleteUser(
+      req.params.id as string
+    );
+
+    res.status(200).json({
+      success: true,
+      data: user,
+    });
+
+  } catch (error: any) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
     });
   }
 };

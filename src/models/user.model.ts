@@ -1,34 +1,30 @@
-import { DataTypes, Model } from "sequelize";
-import { sequelize } from "../config/config";
+import { Schema, model } from "mongoose";
 
+const userSchema = new Schema(
+  {
+    firstName: {
+      type: String,
+      required: true,
+    },
 
-class User extends Model {}
+    lastName: {
+      type: String,
+      required: true,
+    },
 
-User.init(
-{
- id:{
-    type:DataTypes.INTEGER,
-    autoIncrement:true,
-    primaryKey:true
- },
+    email: {
+      type: String,
+      unique: true,
+      required: true,
+    },
 
- name:{
-    type:DataTypes.STRING,
-    allowNull:false
- },
+    phone: {
+      type: String,
+    },
+  },
+  {
+    timestamps: true,
+  }
+);
 
- email:{
-    type:DataTypes.STRING,
-    unique:true
- }
-
-},
-{
- sequelize,
- tableName:"users",
- timestamps:true
-}
-)
-
-
-export default User;
+export default model("User", userSchema);

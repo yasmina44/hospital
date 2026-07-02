@@ -1,37 +1,64 @@
-import { UserRepository } from "../repositories/user.repository";
+import User from "../models/user.model";
 
 
 export class UserService {
 
-private userRepository =
-new UserRepository();
+
+  async createUser(data:any){
+
+    const user = await User.create(data);
+
+    return user;
+
+  }
 
 
-async createUser(data:any){
 
-return this.userRepository.create(data);
+  async getUsers(){
 
-}
+    const users = await User.find();
 
+    return users;
 
-async getUsers(){
-
-return this.userRepository.findAll();
-
-}
+  }
 
 
-async getUser(id:number){
 
-return this.userRepository.findById(id);
+  async getUser(id:string){
 
-}
+    const user = await User.findById(id);
+
+    return user;
+
+  }
 
 
-async deleteUser(id:number){
 
-return this.userRepository.delete(id);
+  async updateUser(
+    id:string,
+    data:any
+  ){
 
-}
+    const user = await User.findByIdAndUpdate(
+      id,
+      data,
+      {new:true}
+    );
+
+    return user;
+
+  }
+
+
+
+
+  async deleteUser(id:string){
+
+    const user = await User.findByIdAndDelete(id);
+
+    return user;
+
+  }
+
 
 }
