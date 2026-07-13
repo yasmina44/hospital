@@ -1,21 +1,21 @@
+import express from "express";
 import dotenv from "dotenv";
-import app from "./app";
 import connectDB from "./config/mongodbcofig";
 
-dotenv.config();
+import userRouter from "./api/user.api";
+import companyRouter from "./api/campany.api";
 
+dotenv.config();
+connectDB();
+
+const app = express();
 const PORT = process.env.PORT || 8080;
 
-const startServer = async () => {
-  try {
-    await connectDB();
+app.use(express.json());
 
-    app.listen(PORT, () => {
-      console.log(`🚀 Server running on port ${PORT}`);
-    });
-  } catch (error) {
-    console.error("❌ Failed to start server:", error);
-  }
-};
+app.use("/api/users", userRouter);
+app.use("/api/companies", companyRouter);
 
-startServer();
+app.listen(PORT, () => {
+  console.log(`🚀 Server is running on http://localhost:${PORT}`);
+});
